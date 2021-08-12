@@ -1,0 +1,391 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 55;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		D76C967926C52BDD00108A5B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D76C967826C52BDD00108A5B /* AppDelegate.swift */; };
+		D76C967B26C52BDD00108A5B /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D76C967A26C52BDD00108A5B /* SceneDelegate.swift */; };
+		D76C967D26C52BDD00108A5B /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D76C967C26C52BDD00108A5B /* ViewController.swift */; };
+		D76C968226C52BDE00108A5B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D76C968126C52BDE00108A5B /* Assets.xcassets */; };
+		D76C968526C52BDE00108A5B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D76C968326C52BDE00108A5B /* LaunchScreen.storyboard */; };
+		D76C968D26C52D2B00108A5B /* CustomARView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D76C968C26C52D2B00108A5B /* CustomARView.swift */; };
+		D76C969026C52EF600108A5B /* DrawableTextureManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D76C968F26C52EF600108A5B /* DrawableTextureManager.swift */; };
+		D76C969226C52FDC00108A5B /* DrawableQueueShaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = D76C969126C52FDC00108A5B /* DrawableQueueShaders.metal */; };
+		D76C969526C5345600108A5B /* cat.jpg in Resources */ = {isa = PBXBuildFile; fileRef = D76C969426C5345600108A5B /* cat.jpg */; };
+		D76C969926C534AD00108A5B /* CustomMaterialShaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = D76C969826C534AD00108A5B /* CustomMaterialShaders.metal */; };
+		D76C969B26C5390300108A5B /* test_image.gif in Resources */ = {isa = PBXBuildFile; fileRef = D76C969A26C5390300108A5B /* test_image.gif */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		D76C967526C52BDD00108A5B /* RealityKit Drawable Queue.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "RealityKit Drawable Queue.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		D76C967826C52BDD00108A5B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		D76C967A26C52BDD00108A5B /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		D76C967C26C52BDD00108A5B /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		D76C968126C52BDE00108A5B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		D76C968426C52BDE00108A5B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		D76C968626C52BDE00108A5B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D76C968C26C52D2B00108A5B /* CustomARView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomARView.swift; sourceTree = "<group>"; };
+		D76C968F26C52EF600108A5B /* DrawableTextureManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawableTextureManager.swift; sourceTree = "<group>"; };
+		D76C969126C52FDC00108A5B /* DrawableQueueShaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = DrawableQueueShaders.metal; sourceTree = "<group>"; };
+		D76C969426C5345600108A5B /* cat.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = cat.jpg; sourceTree = "<group>"; };
+		D76C969826C534AD00108A5B /* CustomMaterialShaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = CustomMaterialShaders.metal; sourceTree = "<group>"; };
+		D76C969A26C5390300108A5B /* test_image.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = test_image.gif; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		D76C967226C52BDD00108A5B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		D76C966C26C52BDD00108A5B = {
+			isa = PBXGroup;
+			children = (
+				D76C967726C52BDD00108A5B /* RealityKit Drawable Queue */,
+				D76C967626C52BDD00108A5B /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		D76C967626C52BDD00108A5B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D76C967526C52BDD00108A5B /* RealityKit Drawable Queue.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		D76C967726C52BDD00108A5B /* RealityKit Drawable Queue */ = {
+			isa = PBXGroup;
+			children = (
+				D76C969326C5345600108A5B /* Resources */,
+				D76C968E26C52EAA00108A5B /* Shaders */,
+				D76C968C26C52D2B00108A5B /* CustomARView.swift */,
+				D76C967826C52BDD00108A5B /* AppDelegate.swift */,
+				D76C967A26C52BDD00108A5B /* SceneDelegate.swift */,
+				D76C967C26C52BDD00108A5B /* ViewController.swift */,
+				D76C968F26C52EF600108A5B /* DrawableTextureManager.swift */,
+				D76C968126C52BDE00108A5B /* Assets.xcassets */,
+				D76C968326C52BDE00108A5B /* LaunchScreen.storyboard */,
+				D76C968626C52BDE00108A5B /* Info.plist */,
+			);
+			path = "RealityKit Drawable Queue";
+			sourceTree = "<group>";
+		};
+		D76C968E26C52EAA00108A5B /* Shaders */ = {
+			isa = PBXGroup;
+			children = (
+				D76C969126C52FDC00108A5B /* DrawableQueueShaders.metal */,
+				D76C969826C534AD00108A5B /* CustomMaterialShaders.metal */,
+			);
+			path = Shaders;
+			sourceTree = "<group>";
+		};
+		D76C969326C5345600108A5B /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				D76C969A26C5390300108A5B /* test_image.gif */,
+				D76C969426C5345600108A5B /* cat.jpg */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		D76C967426C52BDD00108A5B /* RealityKit Drawable Queue */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D76C968926C52BDE00108A5B /* Build configuration list for PBXNativeTarget "RealityKit Drawable Queue" */;
+			buildPhases = (
+				D76C967126C52BDD00108A5B /* Sources */,
+				D76C967226C52BDD00108A5B /* Frameworks */,
+				D76C967326C52BDD00108A5B /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "RealityKit Drawable Queue";
+			productName = "RealityKit Drawable Queue";
+			productReference = D76C967526C52BDD00108A5B /* RealityKit Drawable Queue.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		D76C966D26C52BDD00108A5B /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1300;
+				LastUpgradeCheck = 1300;
+				TargetAttributes = {
+					D76C967426C52BDD00108A5B = {
+						CreatedOnToolsVersion = 13.0;
+					};
+				};
+			};
+			buildConfigurationList = D76C967026C52BDD00108A5B /* Build configuration list for PBXProject "RealityKit Drawable Queue" */;
+			compatibilityVersion = "Xcode 13.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = D76C966C26C52BDD00108A5B;
+			productRefGroup = D76C967626C52BDD00108A5B /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				D76C967426C52BDD00108A5B /* RealityKit Drawable Queue */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		D76C967326C52BDD00108A5B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D76C969B26C5390300108A5B /* test_image.gif in Resources */,
+				D76C969526C5345600108A5B /* cat.jpg in Resources */,
+				D76C968526C52BDE00108A5B /* LaunchScreen.storyboard in Resources */,
+				D76C968226C52BDE00108A5B /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		D76C967126C52BDD00108A5B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D76C969226C52FDC00108A5B /* DrawableQueueShaders.metal in Sources */,
+				D76C967D26C52BDD00108A5B /* ViewController.swift in Sources */,
+				D76C969026C52EF600108A5B /* DrawableTextureManager.swift in Sources */,
+				D76C967926C52BDD00108A5B /* AppDelegate.swift in Sources */,
+				D76C969926C534AD00108A5B /* CustomMaterialShaders.metal in Sources */,
+				D76C968D26C52D2B00108A5B /* CustomARView.swift in Sources */,
+				D76C967B26C52BDD00108A5B /* SceneDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		D76C968326C52BDE00108A5B /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				D76C968426C52BDE00108A5B /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		D76C968726C52BDE00108A5B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		D76C968826C52BDE00108A5B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		D76C968A26C52BDE00108A5B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 86ZBG2MBLH;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "RealityKit Drawable Queue/Info.plist";
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.ampedlabs.RealityKit-Drawable-Queue";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		D76C968B26C52BDE00108A5B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 86ZBG2MBLH;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "RealityKit Drawable Queue/Info.plist";
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.ampedlabs.RealityKit-Drawable-Queue";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		D76C967026C52BDD00108A5B /* Build configuration list for PBXProject "RealityKit Drawable Queue" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D76C968726C52BDE00108A5B /* Debug */,
+				D76C968826C52BDE00108A5B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D76C968926C52BDE00108A5B /* Build configuration list for PBXNativeTarget "RealityKit Drawable Queue" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D76C968A26C52BDE00108A5B /* Debug */,
+				D76C968B26C52BDE00108A5B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = D76C966D26C52BDD00108A5B /* Project object */;
+}
