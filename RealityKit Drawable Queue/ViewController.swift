@@ -10,18 +10,28 @@ import RealityKit
 import ARKit
 
 enum ImageKind: CaseIterable {
-    case ninetiesGIF
+    case celebrate
     case dogeGIF
+    case heartEyes
+    case ninetiesGIF
     case waitingGIF
+    case wow
+    
     
     var imageName: String {
         switch self {
-        case .ninetiesGIF:
-            return "90s"
+        case .celebrate:
+            return "celebrate"
         case .dogeGIF:
             return "doge"
+        case .heartEyes:
+            return "heart-eyes"
+        case .ninetiesGIF:
+            return "90s"
         case .waitingGIF:
             return "waiting"
+        case .wow:
+            return "wow"
         }
     }
     
@@ -30,9 +40,16 @@ enum ImageKind: CaseIterable {
     }
 }
 
+struct CustomDrawableData {
+    let drawableTextureManager: DrawableTextureManager
+    let defaultCustomMaterial: CustomMaterial
+    let customDrawableMaterial: CustomMaterial
+    let textureCGImage: CGImage
+}
+
 class ViewController: UIViewController {
     
-    let imageKind: ImageKind
+    var currentImageKind: ImageKind?
     
     lazy var arView: CustomARView = {
         let view = CustomARView(
@@ -50,53 +67,13 @@ class ViewController: UIViewController {
         return device
     }()
     
-    lazy var drawableTextureManager: DrawableTextureManager? = {
-        guard
-            let textureResource = try? TextureResource.generate(from: textureCGImage, withName: nil, options: .init(semantic: .color))
-        else {
-            return nil
-        }
-        
-        return DrawableTextureManager(
-            arView: arView,
-            initialTextureResource: textureResource,
-            imageName: imageKind.imageName,
-            imageExtension: imageKind.imageExtension,
-            mtlDevice: mtlDevice
-        )
-    }()
+    var drawableDataForImageKind: [ImageKind: CustomDrawableData] = [:]
     
-    lazy var defaultCustomMaterial: CustomMaterial = {
-        guard
-            let textureResource = try? TextureResource.generate(from: textureCGImage, withName: nil, options: .init(semantic: .color))
-        else {
-            fatalError("Texture could not be instantiated")
-        }
-        
-        return makeCustomMaterial(textureResource: textureResource)
-    }()
-    
-    lazy var customDrawableMaterial: CustomMaterial = {
-        guard let textureResource = drawableTextureManager?.textureResource else {
-            fatalError("Texture missing")
-        }
-        
-        return makeCustomMaterial(textureResource: textureResource)
-    }()
-    
-    lazy var textureCGImage: CGImage = {
-        guard
-            let url = Bundle.main.url(
-                forResource: imageKind.imageName,
-                withExtension: imageKind.imageExtension
-            ),
-            let texture = UIImage(contentsOfFile: url.path)?.cgImage
-        else {
-            fatalError("Texture could not be instantiated")
-        }
-        
-        return texture
-    }()
+    var drawableTextureManagers: [DrawableTextureManager] {
+        return drawableDataForImageKind
+            .compactMapValues({ $0 })
+            .map { $0.value.drawableTextureManager }
+    }
     
     lazy var addContentHintLabel: UILabel = {
         let label = makeHintLabel()
@@ -112,11 +89,9 @@ class ViewController: UIViewController {
         return label
     }()
     
+    private var showNonCustomDrawableEntity: Bool = false
+    
     init() {
-        guard let imageKind = ImageKind.allCases.randomElement() else {
-            fatalError("Image kind missing.")
-        }
-        self.imageKind = imageKind
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -137,7 +112,9 @@ class ViewController: UIViewController {
         )
 
         arView.onUpdate = { [weak self] event in
-            self?.drawableTextureManager?.update(withDeltaTime: event.deltaTime)
+            self?.drawableTextureManagers.forEach {
+                $0.update(withDeltaTime: event.deltaTime)
+            }
         }
         
         [addContentHintLabel, explanationLabel].forEach {
@@ -175,11 +152,13 @@ class ViewController: UIViewController {
     }
     
     @objc private func viewWasTapped(sender: UITapGestureRecognizer) {
-        let aspectRatio = Float(textureCGImage.height) / Float(textureCGImage.width)
-        addObjects(aspectRatio: aspectRatio)
+        addObjects()
         
         addContentHintLabel.isHidden = true
-        explanationLabel.isHidden = false
+        
+        if showNonCustomDrawableEntity {
+            explanationLabel.isHidden = false
+        }
     }
 }
 
@@ -188,12 +167,87 @@ private extension ViewController {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.numberOfLines = 0
+        label.textAlignment = .center
         label.textColor = .white
         label.layer.shadowColor = UIColor.black.cgColor
         label.layer.shadowOffset = CGSize(width: 0, height: 2)
         label.layer.shadowRadius = 1
         label.layer.shadowOpacity = 0.3
         return label
+    }
+    
+    func getRandomImageKind() -> ImageKind {
+        guard
+            let randomImageKind = ImageKind.allCases.randomElement()
+        else {
+            return .dogeGIF
+        }
+        
+        if randomImageKind == currentImageKind {
+            return getRandomImageKind()
+        }
+        
+        return randomImageKind
+    }
+    
+    func getDrawableData(forImageKind imageKind: ImageKind) -> CustomDrawableData {
+        if let existingData = drawableDataForImageKind[imageKind] {
+            return existingData
+        }
+        
+        let textureCGImage: CGImage = {
+            guard
+                let url = Bundle.main.url(
+                    forResource: imageKind.imageName,
+                    withExtension: imageKind.imageExtension
+                ),
+                let texture = UIImage(contentsOfFile: url.path)?.cgImage
+            else {
+                fatalError("Texture could not be instantiated")
+            }
+            
+            return texture
+        }()
+        
+        let drawableTextureManager: DrawableTextureManager = {
+            guard
+                let textureResource = try? TextureResource.generate(from: textureCGImage, withName: nil, options: .init(semantic: .color))
+            else {
+                fatalError("DrawableTextureManager could not be instantiated")
+            }
+            
+            return DrawableTextureManager(
+                arView: arView,
+                initialTextureResource: textureResource,
+                imageName: imageKind.imageName,
+                imageExtension: imageKind.imageExtension,
+                mtlDevice: mtlDevice
+            )
+        }()
+        
+        let defaultCustomMaterial: CustomMaterial = {
+            guard
+                let textureResource = try? TextureResource.generate(from: textureCGImage, withName: nil, options: .init(semantic: .color))
+            else {
+                fatalError("Texture could not be instantiated")
+            }
+            
+            return makeCustomMaterial(textureResource: textureResource)
+        }()
+        
+        let customDrawableMaterial: CustomMaterial = {
+            return makeCustomMaterial(textureResource: drawableTextureManager.textureResource)
+        }()
+        
+        let data = CustomDrawableData(
+            drawableTextureManager: drawableTextureManager,
+            defaultCustomMaterial: defaultCustomMaterial,
+            customDrawableMaterial: customDrawableMaterial,
+            textureCGImage: textureCGImage
+        )
+        
+        drawableDataForImageKind[imageKind] = data
+        return data
     }
     
     func makeCustomMaterial(textureResource: TextureResource) -> CustomMaterial {
@@ -219,9 +273,12 @@ private extension ViewController {
     
     func addObjects(
         atDistance distance: Float = 0.75,
-        width: Float = 0.3,
-        aspectRatio: Float
+        width: Float = 0.3
     ) {
+        let randomImageKind = getRandomImageKind()
+        let drawableData = getDrawableData(forImageKind: randomImageKind)
+        let aspectRatio = Float(drawableData.textureCGImage.height) / Float(drawableData.textureCGImage.width)
+        
         let cameraTransform = arView.cameraTransform.matrix
         let height = width * aspectRatio
         
@@ -239,20 +296,31 @@ private extension ViewController {
             arView.scene.addAnchor(anchorEntity)
         }
         
-        let offset: Float = 0.01
+        if showNonCustomDrawableEntity {
+            let offset: Float = 0.01
+            
+            // add first plane
+            addPlane(
+                xOffset: 0,
+                yOffset: -height / 2 - offset,
+                material: drawableData.defaultCustomMaterial
+            )
+            
+            // add second plane
+            addPlane(
+                xOffset: 0,
+                yOffset: height / 2 + offset,
+                material: drawableData.customDrawableMaterial
+            )
+        } else {
+            // add second plane
+            addPlane(
+                xOffset: 0,
+                yOffset: 0,
+                material: drawableData.customDrawableMaterial
+            )
+        }
         
-        // add first plane
-        addPlane(
-            xOffset: 0,
-            yOffset: -height / 2 - offset,
-            material: defaultCustomMaterial
-        )
-        
-        // add second plane
-        addPlane(
-            xOffset: 0,
-            yOffset: height / 2 + offset,
-            material: customDrawableMaterial
-        )
+        currentImageKind = randomImageKind
     }
 }

@@ -19,6 +19,9 @@
 		D76C969B26C5390300108A5B /* waiting.gif in Resources */ = {isa = PBXBuildFile; fileRef = D76C969A26C5390300108A5B /* waiting.gif */; };
 		D76C969D26C5538D00108A5B /* doge.gif in Resources */ = {isa = PBXBuildFile; fileRef = D76C969C26C5538D00108A5B /* doge.gif */; };
 		D76C96A426C5581E00108A5B /* 90s.gif in Resources */ = {isa = PBXBuildFile; fileRef = D76C96A326C5581E00108A5B /* 90s.gif */; };
+		D76C96A826C58FF500108A5B /* wow.gif in Resources */ = {isa = PBXBuildFile; fileRef = D76C96A526C58FF500108A5B /* wow.gif */; };
+		D76C96A926C58FF500108A5B /* celebrate.gif in Resources */ = {isa = PBXBuildFile; fileRef = D76C96A626C58FF500108A5B /* celebrate.gif */; };
+		D76C96AA26C58FF500108A5B /* heart-eyes.gif in Resources */ = {isa = PBXBuildFile; fileRef = D76C96A726C58FF500108A5B /* heart-eyes.gif */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -36,6 +39,9 @@
 		D76C969A26C5390300108A5B /* waiting.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = waiting.gif; sourceTree = "<group>"; };
 		D76C969C26C5538D00108A5B /* doge.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = doge.gif; sourceTree = "<group>"; };
 		D76C96A326C5581E00108A5B /* 90s.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; name = 90s.gif; path = ../../../../../../../Downloads/90s.gif; sourceTree = "<group>"; };
+		D76C96A526C58FF500108A5B /* wow.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = wow.gif; sourceTree = "<group>"; };
+		D76C96A626C58FF500108A5B /* celebrate.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = celebrate.gif; sourceTree = "<group>"; };
+		D76C96A726C58FF500108A5B /* heart-eyes.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = "heart-eyes.gif"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -94,6 +100,9 @@
 		D76C969326C5345600108A5B /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				D76C96A626C58FF500108A5B /* celebrate.gif */,
+				D76C96A726C58FF500108A5B /* heart-eyes.gif */,
+				D76C96A526C58FF500108A5B /* wow.gif */,
 				D76C96A326C5581E00108A5B /* 90s.gif */,
 				D76C969C26C5538D00108A5B /* doge.gif */,
 				D76C969A26C5390300108A5B /* waiting.gif */,
@@ -159,9 +168,12 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D76C96A826C58FF500108A5B /* wow.gif in Resources */,
+				D76C96AA26C58FF500108A5B /* heart-eyes.gif in Resources */,
 				D76C969D26C5538D00108A5B /* doge.gif in Resources */,
 				D76C969B26C5390300108A5B /* waiting.gif in Resources */,
 				D76C968526C52BDE00108A5B /* LaunchScreen.storyboard in Resources */,
+				D76C96A926C58FF500108A5B /* celebrate.gif in Resources */,
 				D76C968226C52BDE00108A5B /* Assets.xcassets in Resources */,
 				D76C96A426C5581E00108A5B /* 90s.gif in Resources */,
 			);
