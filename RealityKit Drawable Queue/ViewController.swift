@@ -89,7 +89,7 @@ class ViewController: UIViewController {
         return label
     }()
     
-    private var showNonCustomDrawableEntity: Bool = false
+    private var showNonCustomDrawableEntity: Bool = true
     
     init() {
         super.init(nibName: nil, bundle: nil)
@@ -147,7 +147,6 @@ class ViewController: UIViewController {
         super.viewDidAppear(animated)
         
         addContentHintLabel.isHidden = false
-        
         //arView.debugOptions.insert(.showStatistics)
     }
     
@@ -313,7 +312,7 @@ private extension ViewController {
                 material: drawableData.customDrawableMaterial
             )
         } else {
-            // add second plane
+            // add single plane without offset
             addPlane(
                 xOffset: 0,
                 yOffset: 0,
