@@ -10,10 +10,32 @@ import ARKit
 import MetalKit
 import AVFoundation
 
+private func < <T: Comparable>(lhs: T?, rhs: T?) -> Bool {
+    switch (lhs, rhs) {
+    case let (l?, r?):
+        return l < r
+    case (nil, _?):
+        return true
+    default:
+        return false
+    }
+}
+
+private struct AnimatedImageData {
+    struct FrameData {
+        let texture: MTLTexture
+        let delay: TimeInterval
+    }
+    
+    let frames: [FrameData]
+}
+
 public class DrawableTextureManager {
     
     public let textureResource: TextureResource
     public let mtlDevice: MTLDevice
+    public let imageName: String
+    public let imageExtension: String
     
     public weak var arView: ARView?
     
@@ -21,10 +43,11 @@ public class DrawableTextureManager {
         
         #warning("If the usage below is set to anything other than .none you need to disable Metal API Validation in the projects Scheme Settings – otherwise you will get a warning similar to: Texture at colorAttachment[0] has usage (0x02) which doesn't specify MTLTextureUsageRenderTarget (0x04) in Xcode 13 Beta")
 
+        // can be whatever you like – 200 × 200 for most GIFs is probably enough
         let descriptor = TextureResource.DrawableQueue.Descriptor(
             pixelFormat: .rgba8Unorm,
-            width: 800,
-            height: 800,
+            width: 200,
+            height: 200,
             usage: .shaderWrite,
             mipmapsMode: .none
         )
@@ -38,12 +61,18 @@ public class DrawableTextureManager {
         }
     }()
     
-    public lazy var commandQueue: MTLCommandQueue? = {
+    private lazy var commandQueue: MTLCommandQueue? = {
         return mtlDevice.makeCommandQueue()
     }()
     
-    public var renderPipelineState: MTLRenderPipelineState?
-    private var imagePlaneVertexBuffer: MTLBuffer!
+    private var renderPipelineState: MTLRenderPipelineState?
+    private var imagePlaneVertexBuffer: MTLBuffer?
+    private var animatedImageData: AnimatedImageData?
+    
+    private var indexOfCurrentFrame: Int = 0
+    private var elapsedTime: TimeInterval = 0
+    private var timeStampForNextFrame: TimeInterval?
+    
     private lazy var textureLoader = MTKTextureLoader(device: mtlDevice)
     
     private func initializeRenderPipelineState() {
@@ -55,7 +84,6 @@ public class DrawableTextureManager {
         
         let pipelineDescriptor = MTLRenderPipelineDescriptor()
         pipelineDescriptor.colorAttachments[0].pixelFormat = .rgba8Unorm
-//        pipelineDescriptor.colorAttachments[0].rgbBlendOperation = MTLBlendOperation.add
         
         let imagePlaneVertexDescriptor = MTLVertexDescriptor()
         imagePlaneVertexDescriptor.attributes[0].format = .float2
@@ -103,13 +131,42 @@ public class DrawableTextureManager {
     
     public init(
         arView: ARView,
-        textureResource: TextureResource,
+        initialTextureResource: TextureResource,
+        imageName: String,
+        imageExtension: String,
         mtlDevice: MTLDevice
     ) {
         self.arView = arView
-        self.textureResource = textureResource
+        self.textureResource = initialTextureResource
+        self.imageName = imageName
+        self.imageExtension = imageExtension
         self.mtlDevice = mtlDevice
         commonInit()
+    }
+    
+    private func loadTextureData() {
+        
+        DispatchQueue.global(qos: .userInteractive).async { [weak self] in
+            autoreleasepool {
+                guard
+                    let self = self,
+                    let url = Bundle.main.url(
+                        forResource: self.imageName, withExtension: self.imageExtension),
+                    let gifData = self.animatedGIF(fromURL: url)
+                else {
+                    fatalError("Image Data could not be loaded")
+                }
+                
+                print("Loaded gif data!")
+                DispatchQueue.main.async {
+                    self.animatedImageData = gifData
+                    
+                    // reset timestamp in index of current frame
+                    self.indexOfCurrentFrame = 0
+                    self.elapsedTime = 0
+                }
+            }
+        }
     }
     
     private func commonInit() {
@@ -123,26 +180,72 @@ public class DrawableTextureManager {
         )
         
         initializeRenderPipelineState()
+        loadTextureData()
     }
 }
 
 public extension DrawableTextureManager {
-    func update() {
+    func update(withDeltaTime deltaTime: TimeInterval) {
+        elapsedTime += deltaTime
+        
         guard
-            let url = Bundle.main.url(forResource: "cat", withExtension: "jpg"),
-            let cgImage = UIImage(contentsOfFile: url.path)?.cgImage,
-            let texture = try? textureLoader.newTexture(cgImage: cgImage)
+            let animatedImageData = animatedImageData
         else {
-            fatalError()
+            return
+        }
+        
+        func bumpIndexOfCurrentFrame() {
+            indexOfCurrentFrame += 1
+            
+            if indexOfCurrentFrame >= animatedImageData.frames.count {
+                indexOfCurrentFrame = 0
+            }
+        }
+        
+        func drawFrameAndAssignNextTimeStamp() {
+            drawFrameAtCurrentIndex()
+            bumpIndexOfCurrentFrame()
+            
+            let delayForNextFrame = animatedImageData.frames[indexOfCurrentFrame].delay
+            timeStampForNextFrame = elapsedTime + delayForNextFrame
+        }
+        
+        if timeStampForNextFrame == nil {
+            drawFrameAndAssignNextTimeStamp()
+            return
         }
         
         guard
+            let nextTimeStamp = timeStampForNextFrame,
+            elapsedTime >= nextTimeStamp
+        else {
+            return
+        }
+        
+        print("Draw next frame with index: \(indexOfCurrentFrame) at time: \(nextTimeStamp)")
+        drawFrameAndAssignNextTimeStamp()
+    }
+    
+    func drawFrameAtCurrentIndex() {
+        guard
+            let animatedImageData = animatedImageData,
+            animatedImageData.frames.indices.contains(indexOfCurrentFrame),
             let drawable = try? drawableQueue.nextDrawable(),
             let commandBuffer = commandQueue?.makeCommandBuffer(),
             let renderPipelineState = renderPipelineState
         else {
             return
         }
+        
+        let currentFrame = animatedImageData.frames[indexOfCurrentFrame]
+        
+//        guard
+//            let drawable = try? drawableQueue.nextDrawable(),
+//            let commandBuffer = commandQueue?.makeCommandBuffer(),
+//            let renderPipelineState = renderPipelineState
+//        else {
+//            return
+//        }
         
         let renderPassDescriptor = MTLRenderPassDescriptor()
         renderPassDescriptor.colorAttachments[0].texture = drawable.texture
@@ -159,12 +262,159 @@ public extension DrawableTextureManager {
         renderEncoder.pushDebugGroup("DrawCapturedImage")
         renderEncoder.setRenderPipelineState(renderPipelineState)
         renderEncoder.setVertexBuffer(imagePlaneVertexBuffer, offset: 0, index: 0)
-        renderEncoder.setFragmentTexture(texture, index: 0)
+        renderEncoder.setFragmentTexture(currentFrame.texture, index: 0)
         renderEncoder.drawPrimitives(type: .triangleStrip, vertexStart: 0, vertexCount: 4)
         renderEncoder.endEncoding()
         
         commandBuffer.commit()
         commandBuffer.waitUntilCompleted()
         drawable.present()
+    }
+}
+
+private extension DrawableTextureManager {
+    func animatedGIF(fromURL url: URL) -> AnimatedImageData? {
+        guard
+            let data = try? Data(contentsOf: url) as CFData,
+            let imageSource = CGImageSourceCreateWithData(data, nil)
+        else {
+            print("Source for the image does not exist")
+            return nil
+        }
+        
+        let frameCount = CGImageSourceGetCount(imageSource)
+        var delays: [TimeInterval] = []
+        var textures: [MTLTexture] = []
+        
+        for index in 0..<frameCount {
+            guard
+                let cgImage = CGImageSourceCreateImageAtIndex(imageSource, index, nil),
+                let mtlTexture = try? textureLoader.newTexture(cgImage: cgImage)
+            else {
+                continue
+            }
+            
+            let delayInSeconds = delayForImage(atIndex: index, source: imageSource)
+            
+            textures.append(mtlTexture)
+            delays.append(delayInSeconds) // Seconds to ms
+            
+//            // At it's delay in cs
+//            let delaySeconds = SKSpriteNode.delayForImageAtIndex(Int(i),
+//                                                            source: source)
+//            delays.append(Int(delaySeconds * 1000.0)) // Seconds to ms
+        }
+        
+        // Calculate full duration
+        let duration: TimeInterval = {
+            var sum: TimeInterval = 0
+
+            for delay in delays {
+                sum += delay
+            }
+            
+            return sum
+        }()
+        
+        print("Full duration: \(duration)")
+        
+        var frames: [AnimatedImageData.FrameData] = []
+        
+        for (texture, delay) in zip(textures, delays) {
+            frames.append(AnimatedImageData.FrameData(texture: texture, delay: delay))
+        }
+        
+        print("Frame data: \(frames)")
+
+        return AnimatedImageData(frames: frames)
+        
+        // may use later
+        // let timePerTexture = Double(duration) / 1000.0 / Double(count)
+    }
+
+    func delayForImage(atIndex index: Int, source: CGImageSource) -> TimeInterval {
+        var delay = 0.1
+        
+        let cfProperties = CGImageSourceCopyPropertiesAtIndex(source, index, nil)
+        let gifProperties: CFDictionary = unsafeBitCast(
+            CFDictionaryGetValue(
+                cfProperties,
+                Unmanaged.passUnretained(kCGImagePropertyGIFDictionary).toOpaque()
+            ),
+            to: CFDictionary.self
+        )
+        
+        var delayObject: AnyObject = unsafeBitCast(
+            CFDictionaryGetValue(
+                gifProperties,
+                Unmanaged.passUnretained(kCGImagePropertyGIFUnclampedDelayTime).toOpaque()
+            ),
+            to: AnyObject.self
+        )
+        
+        if delayObject.doubleValue == 0 {
+            delayObject = unsafeBitCast(
+                CFDictionaryGetValue(
+                    gifProperties,
+                    Unmanaged.passUnretained(kCGImagePropertyGIFDelayTime).toOpaque()),
+                to: AnyObject.self
+            )
+        }
+        
+        if let doubleDelayObject = delayObject as? TimeInterval {
+            delay = doubleDelayObject
+        }
+        
+        if delay < 0.1 {
+            delay = 0.1
+        }
+        
+        return delay
+    }
+    
+    func gcdForPair(_ a: Int?, _ b: Int?) -> Int {
+        var a = a
+        var b = b
+        if b == nil || a == nil {
+            if b != nil {
+                return b!
+            } else if a != nil {
+                return a!
+            } else {
+                return 0
+            }
+        }
+        
+        if a < b {
+            let c = a
+            a = b
+            b = c
+        }
+        
+        var rest: Int
+        while true {
+            rest = a! % b!
+            
+            if rest == 0 {
+                return b!
+            } else {
+                a = b
+                b = rest
+            }
+        }
+    }
+    
+    func gcdForArray(_ array: [Int]) -> Int {
+        if array.isEmpty {
+            return 1
+        }
+        
+        var gcd = array[0]
+        
+        for val in array {
+            gcd = gcdForPair(val, gcd)
+        }
+        
+        return gcd
     }
 }

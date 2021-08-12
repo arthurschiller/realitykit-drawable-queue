@@ -15,7 +15,7 @@ public class CustomARView: ARView {
     
     private var updateCancellable: Cancellable?
     
-    public var onUpdate: ((Scene) -> Void)?
+    public var onUpdate: ((SceneEvents.Update) -> Void)?
     
     public static var mtlLibrary: MTLLibrary = {
         guard
@@ -35,7 +35,7 @@ public class CustomARView: ARView {
         super.init(frame: frameRect, cameraMode: cameraMode, automaticallyConfigureSession: automaticallyConfigureSession)
         
         updateCancellable = scene.subscribe(to: SceneEvents.Update.self, on: nil, { [weak self] event in
-            self?.onUpdate?(event.scene)
+            self?.onUpdate?(event)
         })
     }
     
@@ -45,19 +45,5 @@ public class CustomARView: ARView {
     
     @MainActor @objc required dynamic init(frame frameRect: CGRect) {
         fatalError("init(frame:) has not been implemented")
-    }
-}
-
-// MARK: Rendering Related
-public extension CustomARView {
-    func enablePeopleOcclusion() {
-        guard let configuration = session.configuration else {
-            return
-        }
-        
-        renderOptions.remove(.disablePersonOcclusion)
-        
-        configuration.frameSemantics.insert(.personSegmentationWithDepth)
-        session.run(configuration, options: [])
     }
 }

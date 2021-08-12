@@ -7,14 +7,38 @@
 
 import UIKit
 import RealityKit
+import ARKit
+
+enum ImageKind: CaseIterable {
+    case ninetiesGIF
+    case dogeGIF
+    case waitingGIF
+    
+    var imageName: String {
+        switch self {
+        case .ninetiesGIF:
+            return "90s"
+        case .dogeGIF:
+            return "doge"
+        case .waitingGIF:
+            return "waiting"
+        }
+    }
+    
+    var imageExtension: String {
+        return "gif"
+    }
+}
 
 class ViewController: UIViewController {
+    
+    let imageKind: ImageKind
     
     lazy var arView: CustomARView = {
         let view = CustomARView(
             frame: UIScreen.main.bounds,
             cameraMode: .ar,
-            automaticallyConfigureSession: true
+            automaticallyConfigureSession: false
         )
         return view
     }()
@@ -35,7 +59,9 @@ class ViewController: UIViewController {
         
         return DrawableTextureManager(
             arView: arView,
-            textureResource: textureResource,
+            initialTextureResource: textureResource,
+            imageName: imageKind.imageName,
+            imageExtension: imageKind.imageExtension,
             mtlDevice: mtlDevice
         )
     }()
@@ -60,7 +86,10 @@ class ViewController: UIViewController {
     
     lazy var textureCGImage: CGImage = {
         guard
-            let url = Bundle.main.url(forResource: "cat", withExtension: "jpg"),
+            let url = Bundle.main.url(
+                forResource: imageKind.imageName,
+                withExtension: imageKind.imageExtension
+            ),
             let texture = UIImage(contentsOfFile: url.path)?.cgImage
         else {
             fatalError("Texture could not be instantiated")
@@ -69,19 +98,31 @@ class ViewController: UIViewController {
         return texture
     }()
     
-    lazy var hintLabel: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
+    lazy var addContentHintLabel: UILabel = {
+        let label = makeHintLabel()
         label.font = UIFont.boldSystemFont(ofSize: 18)
-        label.numberOfLines = 0
         label.text = "Tap anywhere\nto add objects"
-        label.textColor = .white
-        label.layer.shadowColor = UIColor.black.cgColor
-        label.layer.shadowOffset = CGSize(width: 0, height: 2)
-        label.layer.shadowRadius = 1
-        label.layer.shadowOpacity = 0.3
         return label
     }()
+    
+    lazy var explanationLabel: UILabel = {
+        let label = makeHintLabel()
+        label.font = UIFont.boldSystemFont(ofSize: 18)
+        label.text = "The upper object uses DrawableQueue, the bottom one a static texture resource."
+        return label
+    }()
+    
+    init() {
+        guard let imageKind = ImageKind.allCases.randomElement() else {
+            fatalError("Image kind missing.")
+        }
+        self.imageKind = imageKind
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func loadView() {
         view = arView
@@ -95,35 +136,67 @@ class ViewController: UIViewController {
             action: #selector(viewWasTapped(sender:)))
         )
 
-        arView.onUpdate = { [weak self] arScene in
-            self?.drawableTextureManager?.update()
+        arView.onUpdate = { [weak self] event in
+            self?.drawableTextureManager?.update(withDeltaTime: event.deltaTime)
         }
         
-        hintLabel.isHidden = true
-        view.addSubview(hintLabel)
+        [addContentHintLabel, explanationLabel].forEach {
+            $0.isHidden = true
+            view.addSubview($0)
+        }
+        
         NSLayoutConstraint.activate([
-            hintLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            hintLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+            addContentHintLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            addContentHintLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            explanationLabel.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -24),
+            explanationLabel.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 24),
+            explanationLabel.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -24)
         ])
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        let configuration = ARWorldTrackingConfiguration()
+        
+        if ARWorldTrackingConfiguration.supportsFrameSemantics(.personSegmentationWithDepth) {
+            configuration.frameSemantics.insert(.personSegmentationWithDepth)
+        }
+        
+        arView.session.run(configuration, options: [])
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        hintLabel.isHidden = false
+        addContentHintLabel.isHidden = false
         
-        arView.enablePeopleOcclusion()
         //arView.debugOptions.insert(.showStatistics)
     }
     
     @objc private func viewWasTapped(sender: UITapGestureRecognizer) {
-        addObjects()
-        hintLabel.isHidden = true
+        let aspectRatio = Float(textureCGImage.height) / Float(textureCGImage.width)
+        addObjects(aspectRatio: aspectRatio)
+        
+        addContentHintLabel.isHidden = true
+        explanationLabel.isHidden = false
     }
 }
 
 private extension ViewController {
-     func makeCustomMaterial(textureResource: TextureResource) -> CustomMaterial {
+    func makeHintLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.numberOfLines = 0
+        label.textColor = .white
+        label.layer.shadowColor = UIColor.black.cgColor
+        label.layer.shadowOffset = CGSize(width: 0, height: 2)
+        label.layer.shadowRadius = 1
+        label.layer.shadowOpacity = 0.3
+        return label
+    }
+    
+    func makeCustomMaterial(textureResource: TextureResource) -> CustomMaterial {
         let surfaceShader = CustomMaterial.SurfaceShader(
             named: "customMaterialSurfaceModifier",
             in: CustomARView.mtlLibrary
@@ -136,6 +209,7 @@ private extension ViewController {
                 lightingModel: .unlit
             )
             customMaterial.custom.texture = .init(textureResource)
+            customMaterial.faceCulling = .none
             
             return customMaterial
         } catch {
@@ -146,10 +220,11 @@ private extension ViewController {
     func addObjects(
         atDistance distance: Float = 0.75,
         width: Float = 0.3,
-        height: Float = 0.22
+        aspectRatio: Float
     ) {
         let cameraTransform = arView.cameraTransform.matrix
-
+        let height = width * aspectRatio
+        
         func addPlane(xOffset: Float, yOffset: Float, material: Material) {
             var offset = matrix_identity_float4x4
             offset.columns.3.z = -distance
