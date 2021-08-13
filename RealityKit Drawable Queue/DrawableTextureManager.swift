@@ -238,15 +238,7 @@ public extension DrawableTextureManager {
         }
         
         let currentFrame = animatedImageData.frames[indexOfCurrentFrame]
-        
-//        guard
-//            let drawable = try? drawableQueue.nextDrawable(),
-//            let commandBuffer = commandQueue?.makeCommandBuffer(),
-//            let renderPipelineState = renderPipelineState
-//        else {
-//            return
-//        }
-        
+
         let renderPassDescriptor = MTLRenderPassDescriptor()
         renderPassDescriptor.colorAttachments[0].texture = drawable.texture
         renderPassDescriptor.colorAttachments[0].loadAction = .load
@@ -298,11 +290,6 @@ private extension DrawableTextureManager {
             
             textures.append(mtlTexture)
             delays.append(delayInSeconds) // Seconds to ms
-            
-//            // At it's delay in cs
-//            let delaySeconds = SKSpriteNode.delayForImageAtIndex(Int(i),
-//                                                            source: source)
-//            delays.append(Int(delaySeconds * 1000.0)) // Seconds to ms
         }
         
         // Calculate full duration
@@ -332,8 +319,11 @@ private extension DrawableTextureManager {
         // let timePerTexture = Double(duration) / 1000.0 / Double(count)
     }
 
+    // most of the following functions are taken from various iOS code samples that demonstrate how to receive the individual frames of a GIF e.g: https://github.com/kiritmodi2702/GIF-Swift/blob/master/GIF-Swift/iOSDevCenters%2BGIF.swift – there might a better way to do this though
+    
     func delayForImage(atIndex index: Int, source: CGImageSource) -> TimeInterval {
-        var delay = 0.1
+        let defaultDelay: TimeInterval = 0.05
+        var delay = defaultDelay
         
         let cfProperties = CGImageSourceCopyPropertiesAtIndex(source, index, nil)
         let gifProperties: CFDictionary = unsafeBitCast(
@@ -365,8 +355,8 @@ private extension DrawableTextureManager {
             delay = doubleDelayObject
         }
         
-        if delay < 0.1 {
-            delay = 0.1
+        if delay < defaultDelay {
+            delay = defaultDelay
         }
         
         return delay

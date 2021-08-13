@@ -69,6 +69,7 @@ class ViewController: UIViewController {
     
     var drawableDataForImageKind: [ImageKind: CustomDrawableData] = [:]
     
+    // the DrawableTextureManager class handles all the heavy lifting for animating the textures
     var drawableTextureManagers: [DrawableTextureManager] {
         return drawableDataForImageKind
             .compactMapValues({ $0 })
@@ -89,7 +90,8 @@ class ViewController: UIViewController {
         return label
     }()
     
-    private var showNonCustomDrawableEntity: Bool = true
+    // set this to false if you only want to show the actual animated texture
+    private var showNonCustomDrawableEntity: Bool = false
     
     init() {
         super.init(nibName: nil, bundle: nil)
@@ -147,6 +149,8 @@ class ViewController: UIViewController {
         super.viewDidAppear(animated)
         
         addContentHintLabel.isHidden = false
+        
+        // optionally enable statistics to observe memory consumption and rendering overhead
         //arView.debugOptions.insert(.showStatistics)
     }
     
@@ -298,6 +302,8 @@ private extension ViewController {
         if showNonCustomDrawableEntity {
             let offset: Float = 0.01
             
+            // add planes with offset so we can compare the animated and non animated textures
+            
             // add first plane
             addPlane(
                 xOffset: 0,
@@ -312,6 +318,7 @@ private extension ViewController {
                 material: drawableData.customDrawableMaterial
             )
         } else {
+            
             // add single plane without offset
             addPlane(
                 xOffset: 0,

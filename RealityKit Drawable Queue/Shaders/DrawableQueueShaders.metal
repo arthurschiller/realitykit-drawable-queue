@@ -29,6 +29,5 @@ fragment half4 drawableQueueFragmentShader(DrawableColorInOut inputVertex [[ sta
                               texture2d<float, access::sample> texture [[ texture(0) ]]) {
     constexpr sampler s(address::clamp_to_edge, filter::linear);
     half4 color = half4(texture.sample(s, inputVertex.texCoord));
-//    color.g *= 0.5;
     return color;
 }

@@ -22,6 +22,7 @@
 		D76C96A826C58FF500108A5B /* wow.gif in Resources */ = {isa = PBXBuildFile; fileRef = D76C96A526C58FF500108A5B /* wow.gif */; };
 		D76C96A926C58FF500108A5B /* celebrate.gif in Resources */ = {isa = PBXBuildFile; fileRef = D76C96A626C58FF500108A5B /* celebrate.gif */; };
 		D76C96AA26C58FF500108A5B /* heart-eyes.gif in Resources */ = {isa = PBXBuildFile; fileRef = D76C96A726C58FF500108A5B /* heart-eyes.gif */; };
+		D76C96B126C5D54400108A5B /* preview.gif in Resources */ = {isa = PBXBuildFile; fileRef = D76C96B026C5D54400108A5B /* preview.gif */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -42,6 +43,9 @@
 		D76C96A526C58FF500108A5B /* wow.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = wow.gif; sourceTree = "<group>"; };
 		D76C96A626C58FF500108A5B /* celebrate.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = celebrate.gif; sourceTree = "<group>"; };
 		D76C96A726C58FF500108A5B /* heart-eyes.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = "heart-eyes.gif"; sourceTree = "<group>"; };
+		D76C96AB26C5AD7000108A5B /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		D76C96AD26C5AD8000108A5B /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
+		D76C96B026C5D54400108A5B /* preview.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = preview.gif; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,6 +62,9 @@
 		D76C966C26C52BDD00108A5B = {
 			isa = PBXGroup;
 			children = (
+				D76C96B026C5D54400108A5B /* preview.gif */,
+				D76C96AD26C5AD8000108A5B /* LICENSE */,
+				D76C96AB26C5AD7000108A5B /* README.md */,
 				D76C967726C52BDD00108A5B /* RealityKit Drawable Queue */,
 				D76C967626C52BDD00108A5B /* Products */,
 			);
@@ -173,6 +180,7 @@
 				D76C969D26C5538D00108A5B /* doge.gif in Resources */,
 				D76C969B26C5390300108A5B /* waiting.gif in Resources */,
 				D76C968526C52BDE00108A5B /* LaunchScreen.storyboard in Resources */,
+				D76C96B126C5D54400108A5B /* preview.gif in Resources */,
 				D76C96A926C58FF500108A5B /* celebrate.gif in Resources */,
 				D76C968226C52BDE00108A5B /* Assets.xcassets in Resources */,
 				D76C96A426C5581E00108A5B /* 90s.gif in Resources */,
