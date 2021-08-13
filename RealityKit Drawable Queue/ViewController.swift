@@ -91,7 +91,7 @@ class ViewController: UIViewController {
     }()
     
     // set this to false if you only want to show the actual animated texture
-    private var showNonCustomDrawableEntity: Bool = false
+    private var showNonCustomDrawableEntity: Bool = true
     
     init() {
         super.init(nibName: nil, bundle: nil)
