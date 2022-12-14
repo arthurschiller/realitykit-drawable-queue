@@ -40,15 +40,13 @@ public class DrawableTextureManager {
     public weak var arView: ARView?
     
     public lazy var drawableQueue: TextureResource.DrawableQueue = {
-        
-        #warning("If the usage below is set to anything other than .none you need to disable Metal API Validation in the projects Scheme Settings – otherwise you will get a warning similar to: Texture at colorAttachment[0] has usage (0x02) which doesn't specify MTLTextureUsageRenderTarget (0x04) in Xcode 13 Beta")
 
         // can be whatever you like – 200 × 200 for most GIFs is probably enough
         let descriptor = TextureResource.DrawableQueue.Descriptor(
             pixelFormat: .rgba8Unorm,
             width: 200,
             height: 200,
-            usage: .shaderWrite,
+            usage: [.renderTarget, .shaderRead, .shaderWrite],
             mipmapsMode: .none
         )
         
